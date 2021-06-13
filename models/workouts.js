@@ -3,10 +3,12 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const WorkoutSchema = new Schema({
-  name: {
-    type: String,
-    required: "Name of Workout is Required",
+  day: {
+    type: Date,
+    required: true,
+    default: Date.now,
   },
+
   exercise: [
     {
       type: Schema.Types.ObjectId,

@@ -24,6 +24,29 @@ app.listen(PORT, () => {
   console.log(`App running on port ${PORT}!`);
 });
 
+//serve exercise.html from link on main UI
 app.get("/exercise", (req, res) => {
   res.sendFile(path.join(__dirname + "/public/exercise.html"));
+});
+
+//get all workouts
+app.get("/workouts", (req, res) => {
+  db.Workout.find({})
+    .then((dbWorkout) => {
+      res.json(dbWorkout);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+//post new workout
+app.post("/api/workouts", ({ body }, res) => {
+  db.Workout.create(body)
+    .then((dbWorkout) => {
+      res.json(dbWorkout);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
 });
