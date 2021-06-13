@@ -30,7 +30,7 @@ app.get("/exercise", (req, res) => {
 });
 
 //get all workouts
-app.get("/workouts", (req, res) => {
+app.get("/api/workouts", (req, res) => {
   db.Workout.find({})
     .then((dbWorkout) => {
       res.json(dbWorkout);
@@ -43,6 +43,20 @@ app.get("/workouts", (req, res) => {
 //post new workout
 app.post("/api/workouts", ({ body }, res) => {
   db.Workout.create(body)
+    .then((dbWorkout) => {
+      res.json(dbWorkout);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+//add exercise
+app.put("/api/workouts/:id", ({ body }, res) => {
+  db.Exercise.create(body)
+    .then(({ _id }) =>
+      db.Workout.findOneAndUpdate({}, { $push: { notes: _id } }, { new: true })
+    )
     .then((dbWorkout) => {
       res.json(dbWorkout);
     })
