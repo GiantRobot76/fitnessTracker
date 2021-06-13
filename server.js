@@ -29,10 +29,26 @@ app.get("/exercise", (req, res) => {
   res.sendFile(path.join(__dirname + "/public/exercise.html"));
 });
 
+//serve stats.html from link on main UI
+app.get("/stats", (req, res) => {
+  res.sendFile(path.join(__dirname + "/public/stats.html"));
+});
+
 //get all workouts
 app.get("/api/workouts", (req, res) => {
   db.Workout.find({})
     .then((dbWorkout) => {
+      res.json(dbWorkout);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+//get all exercises
+app.get("/api/exercises", (req, res) => {
+  db.Exercise.find({})
+    .then((db) => {
       res.json(dbWorkout);
     })
     .catch((err) => {
@@ -52,11 +68,29 @@ app.post("/api/workouts", ({ body }, res) => {
 });
 
 //add exercise
-app.put("/api/workouts/:id", ({ body }, res) => {
-  db.Exercise.create(body)
-    .then(({ _id }) =>
-      db.Workout.findOneAndUpdate({}, { $push: { notes: _id } }, { new: true })
-    )
+app.put("/api/workouts/:id", (req, res) => {
+  db.Exercise.create(req.body)
+    .then(({ _id }) => {
+      console.log("This is the underscore id", _id);
+      console.log("The is req.params.id", req.params.id);
+      db.Workout.findOneAndUpdate(
+        { _id: mongojs.ObjectId(req.params.id) },
+        { $push: { exercises: _id } },
+        { new: true }
+      );
+    })
+    .then((dbWorkout) => {
+      res.json(dbWorkout);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+//get and display workouts in range
+app.get("/api/workouts/range", (req, res) => {
+  db.Workout.find({})
+    // .populate("exercises")
     .then((dbWorkout) => {
       res.json(dbWorkout);
     })
