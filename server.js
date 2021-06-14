@@ -46,15 +46,15 @@ app.get("/api/workouts", (req, res) => {
 });
 
 //get all exercises
-app.get("/api/exercises", (req, res) => {
-  db.Exercise.find({})
-    .then((db) => {
-      res.json(dbWorkout);
-    })
-    .catch((err) => {
-      res.json(err);
-    });
-});
+// app.get("/api/exercises", (req, res) => {
+//   db.Exercise.find({})
+//     .then((db) => {
+//       res.json(dbWorkout);
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//     });
+// });
 
 //post new workout
 app.post("/api/workouts", ({ body }, res) => {
@@ -69,16 +69,12 @@ app.post("/api/workouts", ({ body }, res) => {
 
 //add exercise
 app.put("/api/workouts/:id", (req, res) => {
-  db.Exercise.create(req.body)
-    .then(({ _id }) => {
-      console.log("This is the underscore id", _id);
-      console.log("The is req.params.id", req.params.id);
-      db.Workout.findOneAndUpdate(
-        { _id: mongojs.ObjectId(req.params.id) },
-        { $push: { exercises: _id } },
-        { new: true }
-      );
-    })
+  db.Workout.findByIdAndUpdate(
+    req.params.id,
+    { $push: { exercises: req.body } },
+    { new: true }
+  )
+
     .then((dbWorkout) => {
       res.json(dbWorkout);
     })
