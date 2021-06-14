@@ -86,7 +86,7 @@ app.put("/api/workouts/:id", (req, res) => {
 //get and display workouts in range
 app.get("/api/workouts/range", (req, res) => {
   db.Workout.find({})
-    // .populate("exercises")
+    .populate("exercises")
     .then((dbWorkout) => {
       res.json(dbWorkout);
     })

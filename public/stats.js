@@ -15,8 +15,30 @@ function calculateTotalWeight(data) {
   return totals;
 }
 
+//add function to calculate total durations similar to the one to calculate total weight above. Map method in previous code does not work.
+function calculateTotalDuration(data) {
+  const totals = [];
+
+  data.forEach((workout) => {
+    const workoutTotal = workout.exercises.reduce(
+      (total, { type, duration }) => {
+        if (type === "cardio") {
+          return total + duration;
+        }
+        return total;
+      },
+      0
+    );
+
+    totals.push(workoutTotal);
+  });
+
+  return totals;
+}
+
 function populateChart(data) {
-  const durations = data.map(({ totalDuration }) => totalDuration);
+  // const durations = data.map(({ totalDuration }) => totalDuration);
+  const durations = calculateTotalDuration(data);
   const pounds = calculateTotalWeight(data);
 
   const line = document.querySelector("#canvas").getContext("2d");
