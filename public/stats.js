@@ -22,7 +22,7 @@ function calculateTotalDuration(data) {
   data.forEach((workout) => {
     const workoutTotal = workout.exercises.reduce(
       (total, { type, duration }) => {
-        if (type === "cardio") {
+        if (type === "cardio" || type === "resistance") {
           return total + duration;
         }
         return total;
